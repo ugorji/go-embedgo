@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/ugorji/go-common/flagutil"
@@ -74,7 +75,9 @@ func main() {
 	// - use a hashEncoding that takes a clean path and outputs it
 	// write out a method that will return a *vfs.MemFS based on the constant strings
 
-	var match, notMatch flagutil.RegexpFlagValue
+	var match = regexp.MustCompile(`.*`)
+	var notMatch = regexp.MustCompile(`-----------------------------`)
+
 	var prefix, pkg, vfsPkg, tags, outfile string
 	var doListing bool
 
@@ -84,16 +87,18 @@ func main() {
 	flag.StringVar(&vfsPkg, "vfspkg", vfsPkgName, "`vfs package` name")
 	flag.StringVar(&tags, "t", "", "`build tag list` to put into generated file")
 
-	flag.Var(&match, "match", "`regex` for files names to match")
-	flag.Var(&notMatch, "notmatch", "`regex` for files names to not match")
+	flag.Var((*flagutil.RegexpFlagValue)(match), "match", "`regex` for files names to match")
+	flag.Var((*flagutil.RegexpFlagValue)(notMatch), "notmatch", "`regex` for files names to not match")
 	flag.BoolVar(&doListing, "n", false, "`list files` that will be embedded but do not create the output file")
 
 	flag.Parse()
 
+	// zz.Debug2f("embedgo: after parse, match: %v, notMatch: %v", match, notMatch)
+
 	var fs vfs.Vfs
 	fs.Adds(false, flag.Args()...)
 
-	paths := fs.Matches(match.Regexp(), notMatch.Regexp(), false)
+	paths := fs.Matches(match, notMatch, false)
 	var mpaths = make(map[string]vfs.FileInfo)
 
 	var f vfs.File
