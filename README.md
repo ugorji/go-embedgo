@@ -1,11 +1,11 @@
-# go-embedgo/embedgo
+# embedgo
 
-This repository contains the `go-embedgo/embedgo` library (or command).
+This repository contains the `embedgo` command.
 
 To install:
 
 ```
-go get github.com/ugorji/go-embedgo/embedgo
+go get github.com/ugorji/go-embedgo/cmd/embedgo
 ```
 
 # Package Documentation
