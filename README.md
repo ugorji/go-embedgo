@@ -10,6 +10,7 @@ go get github.com/ugorji/go-embedgo/cmd/embedgo
 
 # Package Documentation
 
+embedgo will take a set of files which may be directories, zip-based
 archives (.zip, .jar, etc) or other files. If a zip-based archive, it will
 treat it as a directory tree.
 
